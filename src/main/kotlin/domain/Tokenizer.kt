@@ -1,7 +1,43 @@
+package domain
+
+import domain.Tokenizer.TokenizerMeta
+
+
+/**
+ * 토큰화 인터페이스 - sealed interface로 구현
+ */
+sealed interface Tokenizer {
+    val info: TokenizerMeta
+
+    fun tokenize(text: String): TokenizedText {
+        val startTime = System.currentTimeMillis()
+        val tokens = doTokenize(text)
+        val endTime = System.currentTimeMillis()
+
+        return TokenizedText(
+            tokens = tokens,
+            executionTimeMs = endTime - startTime,
+            metadata = getMetadata(tokens)
+        )
+    }
+
+    fun doTokenize(text: String): List<Token>
+    fun getMetadata(tokens: List<Token>): Map<String, Any> = emptyMap()
+
+    /**
+     * 토큰화 메타데이터
+     */
+    data class TokenizerMeta(
+        val id: Int,
+        val name: String,
+        val description: String
+    )
+}
+
 /**
  * 공백 기준 토큰화
  */
-data class WhitespaceTokenizer(override val info: TokenizerInfo) : Tokenizer {
+data class WhitespaceTokenizer(override val info: TokenizerMeta) : Tokenizer {
     override fun doTokenize(text: String): List<Token> {
         return text.trim().split(Regex("\\s+"))
             .filter { it.isNotEmpty() }
@@ -12,7 +48,7 @@ data class WhitespaceTokenizer(override val info: TokenizerInfo) : Tokenizer {
 /**
  * 단어 기준 토큰화
  */
-data class WordTokenizer(override val info: TokenizerInfo) : Tokenizer {
+data class WordTokenizer(override val info: TokenizerMeta) : Tokenizer {
     override fun doTokenize(text: String): List<Token> {
         return Regex("[a-zA-Z0-9가-힣]+").findAll(text)
             .map { Token(it.value) }
@@ -23,7 +59,7 @@ data class WordTokenizer(override val info: TokenizerInfo) : Tokenizer {
 /**
  * 문자 기준 토큰화
  */
-data class CharacterTokenizer(override val info: TokenizerInfo) : Tokenizer {
+data class CharacterTokenizer(override val info: TokenizerMeta) : Tokenizer {
     override fun doTokenize(text: String): List<Token> {
         return text.map { Token(it.toString()) }
     }
@@ -32,11 +68,11 @@ data class CharacterTokenizer(override val info: TokenizerInfo) : Tokenizer {
 /**
  * 구두점 포함 토큰화
  */
-data class PunctuationTokenizer(override val info: TokenizerInfo) : Tokenizer {
+data class PunctuationTokenizer(override val info: TokenizerMeta) : Tokenizer {
     override fun doTokenize(text: String): List<Token> {
         val tokens = mutableListOf<Token>()
         val currentToken = StringBuilder()
-        
+
         for (char in text) {
             when {
                 char.isWhitespace() -> {
@@ -45,6 +81,7 @@ data class PunctuationTokenizer(override val info: TokenizerInfo) : Tokenizer {
                         currentToken.clear()
                     }
                 }
+
                 char in ",.!?;:()[]{}\"'-" -> {
                     if (currentToken.isNotEmpty()) {
                         tokens.add(Token(currentToken.toString()))
@@ -52,14 +89,15 @@ data class PunctuationTokenizer(override val info: TokenizerInfo) : Tokenizer {
                     }
                     tokens.add(Token(char.toString()))
                 }
+
                 else -> currentToken.append(char)
             }
         }
-        
+
         if (currentToken.isNotEmpty()) {
             tokens.add(Token(currentToken.toString()))
         }
-        
+
         return tokens
     }
 }
@@ -67,11 +105,11 @@ data class PunctuationTokenizer(override val info: TokenizerInfo) : Tokenizer {
 /**
  * 서브워드 토큰화 (BPE 스타일)
  */
-data class SubwordTokenizer(override val info: TokenizerInfo) : Tokenizer {
+data class SubwordTokenizer(override val info: TokenizerMeta) : Tokenizer {
     override fun doTokenize(text: String): List<Token> {
         val tokens = mutableListOf<Token>()
         val words = text.split(Regex("\\s+")).filter { it.isNotEmpty() }
-        
+
         for (word in words) {
             var remaining = word
             while (remaining.isNotEmpty()) {
@@ -80,10 +118,12 @@ data class SubwordTokenizer(override val info: TokenizerInfo) : Tokenizer {
                         tokens.add(Token(remaining.take(3)))
                         remaining = remaining.drop(3)
                     }
+
                     remaining.length >= 2 -> {
                         tokens.add(Token(remaining.take(2)))
                         remaining = remaining.drop(2)
                     }
+
                     else -> {
                         tokens.add(Token(remaining))
                         remaining = ""
@@ -98,7 +138,7 @@ data class SubwordTokenizer(override val info: TokenizerInfo) : Tokenizer {
 /**
  * 바이트 기준 토큰화
  */
-data class ByteTokenizer(override val info: TokenizerInfo) : Tokenizer {
+data class ByteTokenizer(override val info: TokenizerMeta) : Tokenizer {
     override fun doTokenize(text: String): List<Token> {
         return text.toByteArray(Charsets.UTF_8).map { byte ->
             Token(String.format("%02X", byte))
@@ -110,16 +150,17 @@ data class ByteTokenizer(override val info: TokenizerInfo) : Tokenizer {
  * 길이 기준 토큰화
  */
 data class LengthTokenizer(
-    override val info: TokenizerInfo, 
+    override val info: TokenizerMeta,
     private val length: Int = 4
 ) : Tokenizer {
+
     override fun doTokenize(text: String): List<Token> {
         val cleanText = text.replace(Regex("\\s+"), " ")
         return (0 until cleanText.length step length).map { i ->
             Token(cleanText.substring(i, minOf(i + length, cleanText.length)))
         }
     }
-    
+
     override fun getMetadata(tokens: List<Token>): Map<String, Any> {
         return mapOf("chunk_length" to length)
     }
@@ -128,22 +169,23 @@ data class LengthTokenizer(
 /**
  * 빈도 기반 토큰화
  */
-data class FrequencyTokenizer(override val info: TokenizerInfo) : Tokenizer {
+data class FrequencyTokenizer(override val info: TokenizerMeta) : Tokenizer {
+
     override fun doTokenize(text: String): List<Token> {
         val words = text.split(Regex("\\s+")).filter { it.isNotEmpty() }
             .map { it.replace(Regex("[,.!?;:()\\[\\]{}\"'-]"), "") }
             .filter { it.isNotEmpty() }
-        
+
         val frequency = mutableMapOf<String, Int>()
         for (word in words) {
             frequency[word] = frequency.getOrDefault(word, 0) + 1
         }
-        
+
         return frequency.toList()
             .sortedByDescending { it.second }
             .map { (word, freq) -> Token(word, freq) }
     }
-    
+
     override fun getMetadata(tokens: List<Token>): Map<String, Any> {
         val totalWords = tokens.sumOf { it.score?.toInt() ?: 0 }
         return mapOf("total_words" to totalWords, "unique_words" to tokens.size)
@@ -153,11 +195,12 @@ data class FrequencyTokenizer(override val info: TokenizerInfo) : Tokenizer {
 /**
  * TF-IDF 기반 토큰화
  */
-data class TFIDFTokenizer(override val info: TokenizerInfo) : Tokenizer {
+data class TFIDFTokenizer(override val info: TokenizerMeta) : Tokenizer {
+
     override fun doTokenize(text: String): List<Token> {
         val sentences = text.split(Regex("[.!?]+")).filter { it.trim().isNotEmpty() }
         if (sentences.isEmpty()) return emptyList()
-        
+
         val allWords = mutableSetOf<String>()
         val sentenceWords = sentences.map { sentence ->
             sentence.split(Regex("\\s+")).filter { it.isNotEmpty() }
@@ -165,22 +208,22 @@ data class TFIDFTokenizer(override val info: TokenizerInfo) : Tokenizer {
                 .filter { it.isNotEmpty() }
                 .also { words -> allWords.addAll(words) }
         }
-        
+
         val tfidfScores = mutableMapOf<String, Double>()
-        
+
         for (word in allWords) {
             val tf = sentenceWords.flatten().count { it == word }.toDouble()
             val df = sentenceWords.count { it.contains(word) }.toDouble()
             val idf = if (df > 0) kotlin.math.ln(sentences.size / df) else 0.0
             tfidfScores[word] = tf * idf
         }
-        
+
         return tfidfScores.toList()
             .filter { it.second > 0.0 }
             .sortedByDescending { it.second }
             .map { (word, score) -> Token(word, score) }
     }
-    
+
     override fun getMetadata(tokens: List<Token>): Map<String, Any> {
         return mapOf("vocabulary_size" to tokens.size)
     }
@@ -189,12 +232,13 @@ data class TFIDFTokenizer(override val info: TokenizerInfo) : Tokenizer {
 /**
  * 언어 혼합 토큰화
  */
-data class LanguageTokenizer(override val info: TokenizerInfo) : Tokenizer {
+data class LanguageTokenizer(override val info: TokenizerMeta) : Tokenizer {
+
     override fun doTokenize(text: String): List<Token> {
         val tokens = mutableListOf<Token>()
         var currentToken = StringBuilder()
         var currentType = ""
-        
+
         for (char in text) {
             val charType = when {
                 char in '가'..'힣' || char in 'ㄱ'..'ㅎ' || char in 'ㅏ'..'ㅣ' -> "한글"
@@ -203,7 +247,7 @@ data class LanguageTokenizer(override val info: TokenizerInfo) : Tokenizer {
                 char.isWhitespace() -> "공백"
                 else -> "특수문자"
             }
-            
+
             if (charType == "공백") {
                 if (currentToken.isNotEmpty()) {
                     tokens.add(Token(currentToken.toString(), type = currentType))
@@ -222,14 +266,14 @@ data class LanguageTokenizer(override val info: TokenizerInfo) : Tokenizer {
                 currentType = charType
             }
         }
-        
+
         if (currentToken.isNotEmpty()) {
             tokens.add(Token(currentToken.toString(), type = currentType))
         }
-        
+
         return tokens
     }
-    
+
     override fun getMetadata(tokens: List<Token>): Map<String, Any> {
         val typeCounts = tokens.groupBy { it.type }.mapValues { it.value.size }
         return mapOf("type_distribution" to typeCounts)

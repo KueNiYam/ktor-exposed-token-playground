@@ -1,12 +1,14 @@
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
+import domain.*
+import domain.Tokenizer.TokenizerMeta
 
 class TokenizerTest {
     
     @Test
     fun testWhitespaceTokenizer() {
         val testText = "안녕하세요! Hello World 123"
-        val tokenizer = WhitespaceTokenizer(TokenizerInfo(1, "공백 기준", "공백 문자로 단어 분리"))
+        val tokenizer = WhitespaceTokenizer(TokenizerMeta(1, "공백 기준", "공백 문자로 단어 분리"))
         val result = tokenizer.tokenize(testText)
         
         assertEquals(4, result.tokens.size)
@@ -18,7 +20,7 @@ class TokenizerTest {
     @Test
     fun testWordTokenizer() {
         val testText = "안녕하세요! Hello World 123"
-        val tokenizer = WordTokenizer(TokenizerInfo(2, "단어 기준", "영문자/숫자/한글만 추출"))
+        val tokenizer = WordTokenizer(TokenizerMeta(2, "단어 기준", "영문자/숫자/한글만 추출"))
         val result = tokenizer.tokenize(testText)
         
         assertEquals(4, result.tokens.size)
@@ -29,7 +31,7 @@ class TokenizerTest {
     @Test
     fun testCharacterTokenizer() {
         val testText = "안녕하세요! Hello World 123"
-        val tokenizer = CharacterTokenizer(TokenizerInfo(3, "문자 기준", "각 문자를 개별 토큰으로 분리"))
+        val tokenizer = CharacterTokenizer(TokenizerMeta(3, "문자 기준", "각 문자를 개별 토큰으로 분리"))
         val result = tokenizer.tokenize(testText)
         
         assertEquals(testText.length, result.tokens.size)
@@ -39,7 +41,7 @@ class TokenizerTest {
     
     @Test
     fun testFrequencyTokenizer() {
-        val tokenizer = FrequencyTokenizer(TokenizerInfo(12, "빈도 기반", "단어 출현 빈도로 중요도 계산"))
+        val tokenizer = FrequencyTokenizer(TokenizerMeta(12, "빈도 기반", "단어 출현 빈도로 중요도 계산"))
         val result = tokenizer.tokenize("hello hello world")
         
         assertEquals(2, result.tokens.size)
@@ -53,7 +55,7 @@ class TokenizerTest {
     
     @Test
     fun testLanguageTokenizer() {
-        val tokenizer = LanguageTokenizer(TokenizerInfo(14, "언어 혼합", "한글/영어/숫자/특수문자별 분류"))
+        val tokenizer = LanguageTokenizer(TokenizerMeta(14, "언어 혼합", "한글/영어/숫자/특수문자별 분류"))
         val result = tokenizer.tokenize("안녕 Hello 123 !")
         
         assertEquals(4, result.tokens.size)
@@ -65,7 +67,7 @@ class TokenizerTest {
     
     @Test
     fun testLengthTokenizer() {
-        val tokenizer = LengthTokenizer(TokenizerInfo(11, "길이 기준", "고정 길이로 균등 분할"), 3)
+        val tokenizer = LengthTokenizer(TokenizerMeta(11, "길이 기준", "고정 길이로 균등 분할"), 3)
         val result = tokenizer.tokenize("abcdef")
         
         assertEquals(2, result.tokens.size)
