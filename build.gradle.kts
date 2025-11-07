@@ -12,10 +12,16 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 application {
     mainClass.set("MainKt")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.jar {
