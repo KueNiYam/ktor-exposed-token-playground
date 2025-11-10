@@ -1,33 +1,27 @@
 plugins {
-    kotlin("jvm") version "2.1.0"
-    application
+    kotlin("jvm") version "2.1.0" apply false
+    kotlin("plugin.serialization") version "2.1.0" apply false
 }
 
-group = "com.example"
-version = "1.0"
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation(kotlin("stdlib"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-}
-
-application {
-    mainClass.set("MainKt")
-}
-
-tasks.test {
-    useJUnitPlatform()
-}
-
-tasks.jar {
-    manifest {
-        attributes["Main-Class"] = "MainKt"
+allprojects {
+    group = "com.tokenizer"
+    version = "1.1.0"
+    
+    repositories {
+        mavenCentral()
     }
-    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+subprojects {
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+    
+    dependencies {
+        "implementation"(kotlin("stdlib"))
+        "testImplementation"("org.junit.jupiter:junit-jupiter:5.10.0")
+        "testRuntimeOnly"("org.junit.platform:junit-platform-launcher")
+    }
+    
+    tasks.named<Test>("test") {
+        useJUnitPlatform()
+    }
 }

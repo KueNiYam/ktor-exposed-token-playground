@@ -136,7 +136,7 @@ class CliAdapter {
         println("${BOLD}${CYAN}=== 사용 가능한 토큰화 방법 ===${RESET}")
         println()
         
-        val methods = listMethodsUseCase.getTokenizerMetas()
+        val methods = listMethodsUseCase.execute()
         methods.forEach { info ->
             println("${BOLD}${BLUE}[${info.id}] ${info.name}:${RESET} ${YELLOW}${info.description}${RESET}")
         }
@@ -146,7 +146,7 @@ class CliAdapter {
     }
     
     private fun outputMethodsAsJson() {
-        val methods = listMethodsUseCase.getTokenizerMetas()
+        val methods = listMethodsUseCase.execute()
         
         println("{")
         println("  \"methods\": [")
