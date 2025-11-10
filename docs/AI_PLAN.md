@@ -14,17 +14,22 @@ funny/
 │   ├── domain/                 #   - Tokenizer, Token, TokenizedText
 │   ├── application/            #   - TokenizeUseCase, ListMethodsUseCase  
 │   └── infrastructure/         #   - TokenizerRegistry
-└── adapter/                    # 🔌 어댑터 레이어
-    ├── api/                    #   - Primary Adapter (REST API)
-    │   └── adapters/primary/   #   - WebAdapter
-    └── cli/                    #   - Primary Adapter (CLI)
-        └── adapters/primary/   #   - CliAdapter
+├── adapter/                    # 🔌 어댑터 레이어
+│   ├── api/                    #   - Primary Adapter (REST API)
+│   │   └── adapters/primary/   #   - WebAdapter
+│   └── cli/                    #   - Primary Adapter (CLI)
+│       └── adapters/primary/   #   - CliAdapter
+└── ops/                        # ⚙️ 운영 스크립트 & 설정
+    ├── cli/                    #   - CLI 실행 스크립트
+    ├── api/                    #   - API 배포 스크립트
+    └── docker/                 #   - Docker 설정
 ```
 
-### 배포 시스템 구축
+### 운영 시스템 구축
+- **ops/ 구조**: 코드와 운영 완전 분리
 - **CLI 배포**: `./tokenize.sh` - 독립 실행
 - **API 배포**: `./deploy-api.sh` - 서버 모드
-- **Docker 지원**: 컨테이너화 완료
+- **Docker 지원**: `ops/docker/` - 컨테이너화 완료
 - **포트 충돌 해결**: 완전 분리 실행
 
 ## 🎯 아키텍처 원칙 준수
@@ -58,6 +63,7 @@ CLI Adapter ──→ Core ←── API Adapter
 - ✅ API: REST 엔드포인트, JSON 응답
 - ✅ 독립 실행: 포트 충돌 없음
 - ✅ Docker: 컨테이너 배포 가능
+- ✅ ops 구조: 운영과 코드 분리
 
 ## 🚀 사용법
 
@@ -82,6 +88,7 @@ curl -X POST http://localhost:8080/api/tokenize \
 
 ### Docker 배포
 ```bash
+cd ops/docker
 docker build -t tokenizer-api .
 docker run -p 8080:8080 tokenizer-api
 ```
@@ -89,10 +96,11 @@ docker run -p 8080:8080 tokenizer-api
 ## 🎯 아키텍처 장점
 
 1. **관심사 분리**: 비즈니스 로직과 인터페이스 완전 분리
-2. **테스트 용이성**: Core 로직 독립 테스트 가능
-3. **확장성**: 새로운 어댑터 추가 용이 (GraphQL, gRPC 등)
-4. **유지보수성**: 각 레이어별 독립 수정 가능
-5. **배포 유연성**: CLI/API 선택적 배포
+2. **운영 분리**: 코드(`adapter/`)와 운영(`ops/`) 분리
+3. **테스트 용이성**: Core 로직 독립 테스트 가능
+4. **확장성**: 새로운 어댑터 추가 용이 (GraphQL, gRPC 등)
+5. **유지보수성**: 각 레이어별 독립 수정 가능
+6. **배포 유연성**: CLI/API 선택적 배포
 
 ## 📚 헥사고날 아키텍처 완성
 
@@ -102,5 +110,6 @@ docker run -p 8080:8080 tokenizer-api
 - **Primary Adapters**: CLI, REST API
 - **Core**: 순수 비즈니스 로직 (외부 의존성 없음)
 - **Dependency Inversion**: 모든 의존성이 Core를 향함
+- **Ops Separation**: 운영 관련 파일들의 완전 분리
 
 한국어 텍스트 토큰화라는 도메인 문제를 깔끔한 아키텍처로 해결한 성공 사례입니다.

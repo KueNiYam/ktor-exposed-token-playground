@@ -6,6 +6,24 @@
 ### Fixed
 ### Removed
 
+## [v1.4.0] - 2025-11-11
+### Added
+- ops/ 폴더 구조 도입
+  - ops/cli/: CLI 실행 스크립트
+  - ops/api/: API 배포 스크립트  
+  - ops/docker/: Docker 설정 파일들
+  - ops/README.md: 운영 가이드
+
+### Changed
+- 운영 스크립트와 코드 완전 분리
+- Docker 파일들을 ops/docker/로 이동
+- 배포 스크립트를 ops/api/로 이동
+- CLI 스크립트를 ops/cli/로 이동
+
+### Fixed
+- 프로젝트 구조 더욱 명확하게 정리
+- 관심사 분리 (코드 vs 운영) 완성
+
 ## [v1.3.0] - 2025-11-11
 ### Changed
 - 헥사고날 아키텍처 구조 개선

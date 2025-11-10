@@ -5,8 +5,8 @@ echo "================================"
 
 # 빌드
 echo "📦 API 모듈 빌드 중..."
-cd "$(dirname "$0")/.."
-./gradlew :api:build
+cd "$(dirname "$0")/../.."
+./gradlew :adapter:api:build
 
 if [ $? -ne 0 ]; then
     echo "❌ 빌드 실패"
@@ -24,18 +24,18 @@ read -p "선택 (1-3): " choice
 case $choice in
     1)
         echo "🖥️  로컬에서 서버 실행 중..."
-        java -jar api/build/libs/tokenizer-api-1.1.0.jar
+        java -jar adapter/api/build/libs/tokenizer-api-1.1.0.jar
         ;;
     2)
         echo "🐳 Docker 이미지 빌드 중..."
-        cd api
+        cd ops/docker
         docker build -t tokenizer-api .
         echo "🚀 Docker 컨테이너 실행 중..."
         docker run -p 8080:8080 tokenizer-api
         ;;
     3)
         echo "🐳 Docker Compose 실행 중..."
-        cd api
+        cd ops/docker
         docker-compose up --build
         ;;
     *)
