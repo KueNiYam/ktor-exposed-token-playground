@@ -1,6 +1,5 @@
 import adapters.primary.WebAdapter
 import application.usecases.TokenizeUseCase
-import application.usecases.ListMethodsUseCase
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -32,8 +31,7 @@ fun Application.configureServer() {
     
     // 의존성 주입
     val tokenizeUseCase = TokenizeUseCase()
-    val listMethodsUseCase = ListMethodsUseCase()
-    val webAdapter = WebAdapter(tokenizeUseCase, listMethodsUseCase)
+    val webAdapter = WebAdapter(tokenizeUseCase)
     
     // 라우팅 설정
     webAdapter.configureRouting(this)

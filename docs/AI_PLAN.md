@@ -12,11 +12,12 @@
 funny/
 ├── core/                       # 🎯 비즈니스 로직
 │   ├── domain/                 #   - Tokenizer, Token, TokenizedText
-│   ├── application/            #   - TokenizeUseCase, ListMethodsUseCase  
-│   └── infrastructure/         #   - TokenizerRegistry
+│   │   └── TokenizerRegistry   #   - 도메인 서비스 (토큰화 방법 관리)
+│   └── application/            #   - TokenizeUseCase
+│       └── usecases/
 ├── adapter/                    # 🔌 어댑터 레이어
 │   ├── api/                    #   - Primary Adapter (REST API)
-│   │   └── adapters/primary/   #   - WebAdapter
+│   │   └── adapters/primary/   #   - WebAdapter + DTO
 │   └── cli/                    #   - Primary Adapter (CLI)
 │       └── adapters/primary/   #   - CliAdapter
 └── ops/                        # ⚙️ 운영 스크립트 & 설정
@@ -40,9 +41,9 @@ funny/
 - **특징**: 외부에서 애플리케이션으로 들어오는 요청 처리
 
 ### Core Business Logic
-- **Domain**: 토큰화 규칙과 엔티티
-- **Application**: 유스케이스 (토큰화, 방법 목록)
-- **Infrastructure**: 토큰화 구현체 레지스트리
+- **Domain**: 토큰화 규칙, 엔티티, 도메인 서비스
+- **Application**: 유스케이스 (토큰화)
+- **TokenizerRegistry**: 도메인 서비스로 올바르게 배치
 
 ### 의존성 방향
 ```
@@ -57,6 +58,12 @@ CLI Adapter ──→ Core ←── API Adapter
 - **Core**: ~48KB (순수 비즈니스 로직)
 - **CLI**: ~1.7MB (CLI + Core)
 - **API**: ~15MB (API + Core + Ktor)
+
+### 코드 품질 개선
+- ✅ **불필요한 클래스 제거**: ListMethodsUseCase 삭제
+- ✅ **중복 로직 제거**: TokenizerRegistry 직접 사용
+- ✅ **의존성 주입 통일**: 모든 어댑터에서 생성자 주입
+- ✅ **아키텍처 정리**: TokenizerRegistry를 domain으로 이동
 
 ### 기능 검증 완료
 - ✅ CLI: 10가지 토큰화 방법, JSON/텍스트 출력
@@ -101,14 +108,16 @@ docker run -p 8080:8080 tokenizer-api
 4. **확장성**: 새로운 어댑터 추가 용이 (GraphQL, gRPC 등)
 5. **유지보수성**: 각 레이어별 독립 수정 가능
 6. **배포 유연성**: CLI/API 선택적 배포
+7. **코드 품질**: 불필요한 복잡성 제거
 
 ## 📚 헥사고날 아키텍처 완성
 
 이 프로젝트는 **헥사고날 아키텍처(Ports and Adapters)** 패턴을 완전히 구현했습니다:
 
-- **Ports**: UseCase 인터페이스 (TokenizeUseCase, ListMethodsUseCase)
+- **Ports**: UseCase 인터페이스 (TokenizeUseCase)
 - **Primary Adapters**: CLI, REST API
 - **Core**: 순수 비즈니스 로직 (외부 의존성 없음)
+- **Domain Services**: TokenizerRegistry (올바른 레이어 배치)
 - **Dependency Inversion**: 모든 의존성이 Core를 향함
 - **Ops Separation**: 운영 관련 파일들의 완전 분리
 

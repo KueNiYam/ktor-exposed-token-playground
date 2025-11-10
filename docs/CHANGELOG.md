@@ -6,6 +6,25 @@
 ### Fixed
 ### Removed
 
+## [v1.5.0] - 2025-11-11
+### Changed
+- 코드 품질 개선 및 아키텍처 정리
+  - TokenizerRegistry를 infrastructure → domain으로 이동 (도메인 서비스)
+  - 불필요한 ListMethodsUseCase 제거
+  - TokenizeUseCase 메서드 정리 (사용되지 않는 메서드 제거)
+  - 의존성 주입 통일 (CLI도 생성자 주입으로 변경)
+
+### Removed
+- ListMethodsUseCase 클래스 (중복 로직 제거)
+- TokenizeUseCase.execute(text, methodName) 메서드 (사용 안됨)
+- TokenizerRegistry 불필요한 메서드들
+- infrastructure 패키지 (빈 폴더)
+
+### Fixed
+- 헥사고날 아키텍처 레이어 배치 정정
+- 코드 중복 및 불필요한 복잡성 제거
+- 의존성 주입 일관성 개선
+
 ## [v1.4.0] - 2025-11-11
 ### Added
 - ops/ 폴더 구조 도입

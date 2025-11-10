@@ -1,9 +1,7 @@
-package infrastructure
-
-import domain.*
+package domain
 
 /**
- * 토큰화 레지스트리 - 모든 토큰화 구현체를 관리
+ * 토큰화 레지스트리 - 모든 토큰화 구현체를 관리하는 도메인 서비스
  */
 object TokenizerRegistry {
     private val tokenizers = listOf(
@@ -20,13 +18,6 @@ object TokenizerRegistry {
     )
 
     fun getAllTokenizers(): List<Tokenizer> = tokenizers
-    fun getTotalCount(): Int = tokenizers.size
-
-    /**
-     * 모든 토큰화 방법의 정보를 반환
-     */
-    fun getAllTokenizerMeta(): List<TokenizerMeta> {
-        return tokenizers.map { it.meta }
-            .sortedBy { it.id }
-    }
+    
+    fun getAllTokenizerMeta(): List<TokenizerMeta> = tokenizers.map { it.meta }
 }

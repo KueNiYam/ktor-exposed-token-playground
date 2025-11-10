@@ -2,7 +2,7 @@ package adapters.primary
 
 import adapters.primary.dto.*
 import application.usecases.TokenizeUseCase
-import application.usecases.ListMethodsUseCase
+import domain.TokenizerRegistry
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -10,8 +10,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 class WebAdapter(
-    private val tokenizeUseCase: TokenizeUseCase,
-    private val listMethodsUseCase: ListMethodsUseCase
+    private val tokenizeUseCase: TokenizeUseCase
 ) {
     
     fun configureRouting(application: Application) {
@@ -24,7 +23,7 @@ class WebAdapter(
                 
                 // 토큰화 방법 목록
                 get("/methods") {
-                    val metaList = listMethodsUseCase.execute()
+                    val metaList = TokenizerRegistry.getAllTokenizerMeta()
                     call.respond(MethodsResponse.from(metaList))
                 }
                 

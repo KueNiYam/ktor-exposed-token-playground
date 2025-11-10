@@ -6,9 +6,9 @@ import domain.*
 /**
  * CLI 어댑터 - 명령줄 인터페이스 처리
  */
-class CliAdapter {
-    private val tokenizeUseCase = TokenizeUseCase()
-    private val listMethodsUseCase = ListMethodsUseCase()
+class CliAdapter(
+    private val tokenizeUseCase: TokenizeUseCase
+) {
     
     fun handleCommand(args: Array<String>) {
         if (args.isEmpty()) {
@@ -136,7 +136,7 @@ class CliAdapter {
         println("${BOLD}${CYAN}=== 사용 가능한 토큰화 방법 ===${RESET}")
         println()
         
-        val methods = listMethodsUseCase.execute()
+        val methods = TokenizerRegistry.getAllTokenizerMeta()
         methods.forEach { info ->
             println("${BOLD}${BLUE}[${info.id}] ${info.name}:${RESET} ${YELLOW}${info.description}${RESET}")
         }
@@ -146,7 +146,7 @@ class CliAdapter {
     }
     
     private fun outputMethodsAsJson() {
-        val methods = listMethodsUseCase.execute()
+        val methods = TokenizerRegistry.getAllTokenizerMeta()
         
         println("{")
         println("  \"methods\": [")
