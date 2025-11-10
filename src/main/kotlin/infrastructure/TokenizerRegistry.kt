@@ -1,5 +1,6 @@
+package infrastructure
+
 import domain.*
-import domain.Tokenizer.TokenizerMeta
 
 /**
  * 토큰화 레지스트리 - 모든 토큰화 구현체를 관리
@@ -24,8 +25,8 @@ object TokenizerRegistry {
     /**
      * 모든 토큰화 방법의 정보를 반환
      */
-    fun getAllTokenizerInfo(): List<Triple<Int, String, String>> {
-        return tokenizers.map { Triple(it.info.id, it.info.name, it.info.description) }
+    fun getAllTokenizerMeta(): List<Triple<Int, String, String>> {
+        return tokenizers.map { Triple(it.meta.id, it.meta.name, it.meta.description) }
             .sortedBy { it.first }
     }
 }

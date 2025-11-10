@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import domain.*
-import domain.Tokenizer.TokenizerMeta
+import infrastructure.TokenizerRegistry
 
 class TokenizerTest {
     
@@ -83,7 +83,7 @@ class TokenizerTest {
         assertEquals(10, tokenizers.size)
         assertEquals(10, TokenizerRegistry.getTotalCount())
         
-        val info = TokenizerRegistry.getAllTokenizerInfo()
+        val info = TokenizerRegistry.getAllTokenizerMeta()
         assertEquals(10, info.size)
         assertEquals(1, info[0].first)  // ID 순으로 정렬됨
     }

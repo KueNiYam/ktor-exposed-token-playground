@@ -6,6 +6,27 @@
 ### Fixed
 ### Removed
 
+## [v1.1.0] - 2025-11-11
+### Added
+- 헥사고날 아키텍처 구현
+  - Domain 계층: Tokenizer sealed interface, Token, TokenizedText
+  - Application 계층: TokenizeUseCase, ListMethodsUseCase
+  - Primary Adapter: CliAdapter
+  - Infrastructure: TokenizerRegistry
+- API 개발 계획 문서 (API_DEVELOPMENT_PLAN.md)
+- 표준 Gradle 디렉토리 구조 적용
+- 의존성 주입 패턴 도입
+
+### Changed
+- TokenizerInfo → TokenizerMeta 리네이밍 (더 간결한 네이밍)
+- 패키지 구조 재편성 (domain, application, adapters, infrastructure)
+- UseCase 패턴으로 비즈니스 로직 분리
+- 문서 파일들을 docs/ 폴더로 이동
+
+### Fixed
+- 코드 구조 개선으로 유지보수성 향상
+- 테스트 커버리지 유지 (모든 기능 정상 작동 확인)
+
 ## [v1.0.0] - 2025-11-07
 ### Added
 - Sealed interface 기반 토큰화 시스템 구현
