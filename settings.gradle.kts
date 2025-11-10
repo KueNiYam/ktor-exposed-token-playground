@@ -1,5 +1,6 @@
 rootProject.name = "funny"
 
 include("core")
-include("cli") 
-include("api")
+include("adapter")
+include("adapter:api")
+include("adapter:cli")
