@@ -25,8 +25,8 @@ object TokenizerRegistry {
     /**
      * 모든 토큰화 방법의 정보를 반환
      */
-    fun getAllTokenizerMeta(): List<Triple<Int, String, String>> {
-        return tokenizers.map { Triple(it.meta.id, it.meta.name, it.meta.description) }
-            .sortedBy { it.first }
+    fun getAllTokenizerMeta(): List<TokenizerMeta> {
+        return tokenizers.map { it.meta }
+            .sortedBy { it.id }
     }
 }

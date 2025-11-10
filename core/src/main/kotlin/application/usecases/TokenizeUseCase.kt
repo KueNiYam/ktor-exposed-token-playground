@@ -28,7 +28,7 @@ class TokenizeUseCase {
         }
     }
     
-    fun execute(text: String, methodIds: List<Int>?): List<Triple<TokenizerMeta, TokenizedText, Map<String, Any>>> {
+    fun execute(text: String, methodIds: List<Int>?): List<Pair<TokenizerMeta, TokenizedText>> {
         val tokenizers = TokenizerRegistry.getAllTokenizers()
         val selectedTokenizers = if (methodIds != null) {
             tokenizers.filter { it.meta.id in methodIds }
@@ -37,8 +37,7 @@ class TokenizeUseCase {
         }
         
         return selectedTokenizers.map { tokenizer ->
-            val result = tokenizer.tokenize(text)
-            Triple(tokenizer.meta, result, emptyMap<String, Any>())
+            tokenizer.meta to tokenizer.tokenize(text)
         }
     }
 }
