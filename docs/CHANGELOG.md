@@ -6,6 +6,29 @@
 ### Fixed
 ### Removed
 
+## [v1.2.0] - 2025-11-11
+### Added
+- 멀티모듈 아키텍처 구현
+  - core: 순수 비즈니스 로직 모듈 (48KB)
+  - cli: CLI 전용 모듈 (1.7MB)
+  - api: REST API 서버 모듈 (15MB)
+- 독립 배포 스크립트
+  - CLI: ./cli/tokenize.sh
+  - API: ./api/deploy-api.sh
+- Docker 컨테이너화 지원
+- 모듈별 Gradle 빌드 설정
+
+### Changed
+- 단일 JAR에서 멀티모듈로 완전 분리
+- JAR 크기 85% 최적화 (CLI 기준)
+- 의존성 분리 (CLI에서 Ktor 제거)
+- 배포 프로세스 완전 분리
+
+### Fixed
+- 포트 충돌 문제 해결 (독립 실행)
+- 의존성 혼재 문제 해결
+- 크기 비효율성 문제 해결
+
 ## [v1.1.0] - 2025-11-11
 ### Added
 - 헥사고날 아키텍처 구현
