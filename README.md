@@ -2,9 +2,21 @@
 
 한국어와 영어 텍스트를 14가지 방법으로 토큰화하는 Kotlin 프로그램입니다.
 
+## 아키텍처
+
+**헥사고날 아키텍처(Hexagonal Architecture)** 패턴을 적용한 멀티모듈 구조:
+
+```
+funny/
+├── core/                    # 비즈니스 로직 (도메인, 유스케이스)
+└── adapter/                 # 어댑터 레이어
+    ├── api/                 # Primary Adapter - REST API
+    └── cli/                 # Primary Adapter - CLI
+```
+
 ## 주요 기능
 
-- 14가지 토큰화 방법 지원
+- 10가지 토큰화 방법 지원
 - **CLI 인터페이스**: 명령줄에서 직접 사용
 - **REST API**: HTTP 서버로 웹 서비스 제공
 - JSON 및 텍스트 출력 형식
