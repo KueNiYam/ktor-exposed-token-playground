@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TokenizeRequest(
     val text: String,
-    val methods: List<Int>? = null
+    val method: Int? = null  // null = 모든 방법, 숫자 = 특정 방법
 )
 
 @Serializable
@@ -63,6 +63,13 @@ data class TokenizeResponse(
                 results = results.map { (meta, result) ->
                     TokenizeResult.from(meta, result)
                 }
+            )
+        }
+        
+        fun from(input: String, result: Pair<TokenizerMeta, TokenizedText>): TokenizeResponse {
+            return TokenizeResponse(
+                input = input,
+                results = listOf(TokenizeResult.from(result.first, result.second))
             )
         }
     }

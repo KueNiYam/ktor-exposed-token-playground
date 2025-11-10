@@ -1,29 +1,29 @@
 package application.usecases
 
 import domain.*
+import ports.TokenizerPort
 
 /**
- * 토큰화 유스케이스 - 핵심 비즈니스 로직
+ * 토큰화 유스케이스 - TokenizerPort 구현
  */
-class TokenizeUseCase {
+class TokenizeUseCase : TokenizerPort {
     
-    fun executeAll(text: String): List<Pair<TokenizerMeta, TokenizedText>> {
+    override fun tokenizeAll(text: String): List<Pair<TokenizerMeta, TokenizedText>> {
         val tokenizers = TokenizerRegistry.getAllTokenizers()
         return tokenizers.map { tokenizer ->
             tokenizer.meta to tokenizer.tokenize(text)
         }
     }
     
-    fun execute(text: String, methodIds: List<Int>?): List<Pair<TokenizerMeta, TokenizedText>> {
+    override fun tokenizeWith(text: String, methodId: Int): Pair<TokenizerMeta, TokenizedText> {
         val tokenizers = TokenizerRegistry.getAllTokenizers()
-        val selectedTokenizers = if (methodIds != null) {
-            tokenizers.filter { it.meta.id in methodIds }
-        } else {
-            tokenizers
-        }
+        val tokenizer = tokenizers.find { it.meta.id == methodId }
+            ?: throw IllegalArgumentException("토큰화 방법을 찾을 수 없습니다: $methodId")
         
-        return selectedTokenizers.map { tokenizer ->
-            tokenizer.meta to tokenizer.tokenize(text)
-        }
+        return tokenizer.meta to tokenizer.tokenize(text)
+    }
+    
+    override fun getAvailableMethods(): List<TokenizerMeta> {
+        return TokenizerRegistry.getAllTokenizerMeta()
     }
 }

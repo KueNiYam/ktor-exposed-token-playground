@@ -1,13 +1,12 @@
 package adapters.primary
 
-import application.usecases.*
-import domain.*
+import ports.TokenizerPort
 
 /**
  * CLI 어댑터 - 명령줄 인터페이스 처리
  */
 class CliAdapter(
-    private val tokenizeUseCase: TokenizeUseCase
+    private val tokenizerPort: TokenizerPort
 ) {
     
     fun handleCommand(args: Array<String>) {
@@ -68,7 +67,7 @@ class CliAdapter(
         println("${YELLOW}입력 텍스트:${RESET} $input")
         println()
         
-        val results = tokenizeUseCase.executeAll(input)
+        val results = tokenizerPort.tokenizeAll(input)
         
         results.forEach { (info, result) ->
             println("${BOLD}${BLUE}[${info.id}] ${info.name}:${RESET} ${YELLOW}(${info.description})${RESET}")
@@ -101,7 +100,7 @@ class CliAdapter(
     }
     
     private fun outputAsJson(input: String) {
-        val results = tokenizeUseCase.executeAll(input)
+        val results = tokenizerPort.tokenizeAll(input)
         
         println("{")
         println("  \"input\": \"${input.replace("\"", "\\\"")}\",")
@@ -136,7 +135,7 @@ class CliAdapter(
         println("${BOLD}${CYAN}=== 사용 가능한 토큰화 방법 ===${RESET}")
         println()
         
-        val methods = TokenizerRegistry.getAllTokenizerMeta()
+        val methods = tokenizerPort.getAvailableMethods()
         methods.forEach { info ->
             println("${BOLD}${BLUE}[${info.id}] ${info.name}:${RESET} ${YELLOW}${info.description}${RESET}")
         }
@@ -146,7 +145,7 @@ class CliAdapter(
     }
     
     private fun outputMethodsAsJson() {
-        val methods = TokenizerRegistry.getAllTokenizerMeta()
+        val methods = tokenizerPort.getAvailableMethods()
         
         println("{")
         println("  \"methods\": [")

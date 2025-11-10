@@ -6,6 +6,20 @@
 ### Fixed
 ### Removed
 
+## [v1.6.0] - 2025-11-11
+### Added
+- TokenizerPort 인터페이스 구현 (헥사고날 아키텍처 완성)
+- API DTO 분리 (TokenizeDto.kt, MethodsDto.kt)
+- DTO 팩토리 메서드 구현
+
+### Changed
+- API 파라미터 단순화 (methods → method)
+- Triple 사용 제거, Pair 구조로 개선
+- 문서 정리 및 중복 제거
+
+### Removed
+- 불필요한 중복 코드 및 추상화
+
 ## [v1.5.0] - 2025-11-11
 ### Changed
 - 코드 품질 개선 및 아키텍처 정리

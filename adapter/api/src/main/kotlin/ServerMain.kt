@@ -29,9 +29,9 @@ fun Application.configureServer() {
         allowHeader("Content-Type")
     }
     
-    // 의존성 주입
-    val tokenizeUseCase = TokenizeUseCase()
-    val webAdapter = WebAdapter(tokenizeUseCase)
+    // 의존성 주입 - TokenizerPort 구현체 주입
+    val tokenizerPort = TokenizeUseCase()
+    val webAdapter = WebAdapter(tokenizerPort)
     
     // 라우팅 설정
     webAdapter.configureRouting(this)
