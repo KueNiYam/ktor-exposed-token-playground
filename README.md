@@ -7,7 +7,7 @@
 **헥사고날 아키텍처(Hexagonal Architecture)** 패턴을 적용한 멀티모듈 구조:
 
 ```
-funny/
+ktor-exposed-token-playground/
 ├── core/                    # 비즈니스 로직 (도메인, 유스케이스)
 ├── adapter/                 # 어댑터 레이어
 │   ├── api/                 # Primary Adapter - REST API

@@ -1,4 +1,4 @@
-rootProject.name = "funny"
+rootProject.name = "ktor-exposed-token-playground"
 
 include("core")
 include("adapter")

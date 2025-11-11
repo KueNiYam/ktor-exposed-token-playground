@@ -9,7 +9,7 @@
 
 ### 멀티모듈 구조 완성
 ```
-funny/
+ktor-exposed-token-playground/
 ├── core/                       # 🎯 비즈니스 로직
 │   ├── domain/                 #   - Tokenizer, Token, TokenizedText
 │   │   └── TokenizerRegistry   #   - 도메인 서비스 (토큰화 방법 관리)
