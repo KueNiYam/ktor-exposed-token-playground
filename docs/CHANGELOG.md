@@ -2,9 +2,17 @@
 
 ## [Unreleased]
 ### Added
-### Changed  
+- Ktor 3.3.2 업그레이드 (최신 stable 버전)
+- Shadow JAR 자동 생성 지원
+
+### Changed
+- 코드 주석 스타일 개선 (인라인 → 블록 주석)
+- 의존성 관리 개선 (io.ktor.plugin 사용)
+- API 서버 구조 최적화
+
 ### Fixed
 ### Removed
+- OpenAPI/Swagger 의존성 (복잡성 제거)
 
 ## [v1.6.0] - 2025-11-11
 ### Added

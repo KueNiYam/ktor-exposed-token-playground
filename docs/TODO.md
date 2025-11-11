@@ -36,7 +36,7 @@
 - [ ] Rate Limiting
 
 ### 문서화
-- [ ] OpenAPI/Swagger 문서 생성
+- [ ] OpenAPI/Swagger 문서 생성 (보류 - 복잡성으로 인해 제외)
 - [ ] API 사용 가이드 작성
 - [ ] 아키텍처 다이어그램 추가
 

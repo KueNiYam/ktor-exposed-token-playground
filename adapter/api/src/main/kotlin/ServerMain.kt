@@ -33,9 +33,12 @@ fun Application.configureServer() {
     val tokenizerPort = TokenizeUseCase()
     val webAdapter = WebAdapter(tokenizerPort)
     
-    // 라우팅 설정
+    // API 라우팅 설정
     webAdapter.configureRouting(this)
     
-    println("🚀 토큰화 API 서버가 http://localhost:8080 에서 실행 중입니다")
-    println("📖 API 문서: http://localhost:8080/api/health")
+    println("🚀 토큰화 API 서버 실행 완료!")
+    println("📍 서버: http://localhost:8080")
+    println("💡 헬스체크: http://localhost:8080/api/health")
+    println("🔧 토큰화: http://localhost:8080/api/tokenize")
+    println("📋 방법 목록: http://localhost:8080/api/methods")
 }

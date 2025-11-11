@@ -64,7 +64,7 @@ curl http://localhost:8080/api/methods
 # 토큰화 실행
 curl -X POST http://localhost:8080/api/tokenize \
   -H "Content-Type: application/json" \
-  -d '{"text": "안녕하세요!", "methods": [1, 14]}'
+  -d '{"text": "안녕하세요!", "method": 1}'
 ```
 
 ## 배포
