@@ -21,6 +21,12 @@ Thumbs.db
 *.tmp
 *.log
 
+# 로그 파일
+server.log
+
+# 루트 JAR 파일
+/*.jar
+
 ### IntelliJ IDEA ###
 !**/src/main/**/out/
 !**/src/test/**/out/
@@ -48,3 +54,6 @@ bin/
 /.nb-gradle/
 # Gradle
 .gradle/
+
+# Amazon Q CLI
+.amazonq/
