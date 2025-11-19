@@ -1,9 +1,9 @@
-FROM openjdk:17-jre-slim
+FROM eclipse-temurin:17-jre-jammy
 
 WORKDIR /app
 
-# JAR 파일 복사 (ops/docker에서 실행되므로 상대경로 조정)
-COPY ../../adapter/api/build/libs/tokenizer-api-1.1.0.jar app.jar
+# API JAR 복사 (빌드 컨텍스트는 프로젝트 루트)
+COPY adapter/api/build/libs/tokenizer-api-1.1.0.jar app.jar
 
 # 포트 노출
 EXPOSE 8080

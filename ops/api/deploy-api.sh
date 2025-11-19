@@ -21,6 +21,8 @@ echo "2) Docker 빌드 & 실행"
 echo "3) Docker Compose 실행"
 read -p "선택 (1-3): " choice
 
+project_root="$(pwd)"
+
 case $choice in
     1)
         echo "🖥️  로컬에서 서버 실행 중..."
@@ -28,15 +30,13 @@ case $choice in
         ;;
     2)
         echo "🐳 Docker 이미지 빌드 중..."
-        cd ops/docker
-        docker build -t tokenizer-api .
+        docker build -f ops/docker/Dockerfile -t tokenizer-api . || exit 1
         echo "🚀 Docker 컨테이너 실행 중..."
         docker run -p 8080:8080 tokenizer-api
         ;;
     3)
         echo "🐳 Docker Compose 실행 중..."
-        cd ops/docker
-        docker-compose up --build
+        (cd ops/docker && docker-compose up --build)
         ;;
     *)
         echo "❌ 잘못된 선택입니다."

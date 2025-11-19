@@ -1,8 +1,8 @@
-version: '3.8'
-
 services:
   tokenizer-api:
-    build: .
+    build:
+      context: ../..
+      dockerfile: ops/docker/Dockerfile
     ports:
       - "8080:8080"
     environment:

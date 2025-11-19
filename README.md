@@ -80,14 +80,13 @@ curl -X POST http://localhost:8080/api/tokenize \
 
 ### Docker 배포
 ```bash
-# Docker 빌드 & 실행
-cd ops/docker
-docker build -t tokenizer-api .
-docker run -p 8080:8080 tokenizer-api
+# Docker 빌드 & 실행 (deploy-api.sh 2번과 동일)
+./deploy-api.sh
+# 선택 2 입력 후 Docker 처리
 
-# Docker Compose
-cd ops/docker
-docker-compose up --build
+# Docker Compose (deploy-api.sh 3번과 동일)
+./deploy-api.sh
+# 선택 3 입력 후 Docker Compose 처리
 ```
 
 ## 개발
