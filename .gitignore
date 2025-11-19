@@ -3,6 +3,7 @@
 *.class
 out/
 build/
+!gradle/wrapper/gradle-wrapper.jar
 
 # Kotlin 컴파일러 (다운로드된 파일)
 kotlin-compiler-*.zip
